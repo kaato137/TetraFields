@@ -88,20 +88,19 @@ function drawCellContent(x, y, w, h, cellContent, bw, bh)
     local bw = bw or 4
     local bh = bh or 4
     local lg = love.graphics
+    local playersCount = #cellContent
 
-    local rowHeight = h / #cellContent
+    local rowHeight = h / playersCount
 
-    for playeri = 1, #cellContent do
-        local ballCount = cellContent[playeri]
-        for balli = 1, ballCount do
-            local center = x + (w / 2) - (ballCount * bw)
-            lg.setColor(COLOR_MAP[playeri])
-            lg.circle(
-                "fill",
-                center + (balli-1) * bw,
-                y + (rowHeight * (playeri - 1)),
-                bw,
-                bh
+    for pli = 1, playersCount do
+        local ballCount = cellContent[pli]
+        lg.setColor(COLOR_MAP[pli])
+        for bi = 1, ballCount do
+            local center = x + (w / 2) - (ballCount * bw * 2) / 2
+            lg.circle("fill",
+                center + (bi-1) * (bw * 2),
+                y + (rowHeight * (pli - 1)) + bh * 2,
+                bw, bh
             )
         end
     end
