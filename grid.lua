@@ -39,6 +39,19 @@ function Grid:draw()
     drawGrid(self.x, self.y, self.cols, self.rows, self.size)
     lg.setColor(255, 255, 255)
 
+    -- Draw mouse position
+    local mx = love.mouse.getX()
+    local my = love.mouse.getY()
+    local text = mx .. ' ' .. my
+    lg.print(text, 32, 32)
+
+    if utils.includes(mx, my, self.x, self.y, self.width, self.height) then
+        local cellOnX = math.floor(math.abs(mx - self.x) / self.size) * self.size
+        local cellOnY = math.floor(math.abs(my - self.y) / self.size) * self.size
+        lg.print("INSIDE", 20, 20)
+        lg.rectangle('fill', cellOnX + self.x, cellOnY + self.y, self.size, self.size)
+    end
+
     -- Draw grid content
     for j = 1, #self.content do
         for i = 1, #self.content[j] do
@@ -51,15 +64,7 @@ function Grid:draw()
         end
     end
 
-    -- Draw mouse position
-    local mx = love.mouse.getX()
-    local my = love.mouse.getY()
-    local text = mx .. ' ' .. my
-    lg.print(text, 32, 32)
 
-    if utils.includes(mx, my, self.x, self.y, self.width, self.height) then
-        lg.print("INSIDE", 20, 20)
-    end
 end
 
 
@@ -98,7 +103,7 @@ function drawCellContent(x, y, w, h, cellContent, bw, bh)
         for bi = 1, ballCount do
             local center = x + (w / 2) - (ballCount * bw * 2) / 2
             lg.circle("fill",
-                center + (bi-1) * (bw * 2),
+                center + (bi-1) * (bw * 2) + bw,
                 y + (rowHeight * (pli - 1)) + bh * 2,
                 bw, bh
             )
