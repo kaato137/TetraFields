@@ -40,16 +40,17 @@ function Grid:draw()
     lg.setColor(255, 255, 255)
 
     -- Draw mouse position
-    local mx = love.mouse.getX()
-    local my = love.mouse.getY()
-    local text = mx .. ' ' .. my
-    lg.print(text, 32, 32)
-
-    if utils.includes(mx, my, self.x, self.y, self.width, self.height) then
-        local cellOnX = math.floor(math.abs(mx - self.x) / self.size) * self.size
-        local cellOnY = math.floor(math.abs(my - self.y) / self.size) * self.size
+    if self:isMouseOn() then
+        local mx, my = self:mouse2pos()
         lg.print("INSIDE", 20, 20)
-        lg.rectangle('fill', cellOnX + self.x, cellOnY + self.y, self.size, self.size)
+        lg.setColor(20, 20, 50)
+        lg.rectangle('fill', 
+            mx * self.size + self.x, 
+            my * self.size + self.y, 
+            self.size, self.size)
+
+        -- Draw shape projection
+        self:projectShapeToGrid('l', 1, 1)
     end
 
     -- Draw grid content
@@ -63,8 +64,44 @@ function Grid:draw()
             )
         end
     end
+end
 
 
+function Grid:isMouseOn()
+    local mx = love.mouse.getX()
+    local my = love.mouse.getY()
+    return utils.includes(mx, my, self.x, self.y, self.width - 1, self.height - 1)
+end
+
+
+function Grid:mouse2pos()
+    local mx = love.mouse.getX()
+    local my = love.mouse.getY()
+    local cellOnX = math.floor(math.abs(mx - self.x) / self.size)
+    local cellOnY = math.floor(math.abs(my - self.y) / self.size)
+    return cellOnX, cellOnY
+end
+
+
+function Grid:projectShapeToGrid(shapeCode, rot, playerId)
+    local mx, my = self:mouse2pos()
+    local shape = shapes[shapeCode][rot]
+    local lg = love.graphics
+
+    -- Harcode fours because i don't think 
+    -- i would do larger shapes
+    lg.setColor(COLOR_MAP[playerId])
+    for j = 1, 4 do
+        for i = 1, 4 do
+            if shape[j][i] == 1 then
+                lg.rectangle('fill', 
+                    self.x + (mx - 1 + i - 1) * self.size,
+                    self.y + (my - 1 + j - 1) * self.size,
+                    self.size, self.size
+                )
+            end
+        end
+    end
 end
 
 
@@ -87,6 +124,7 @@ function drawGrid(ox, oy, cols, rows, size)
         end
     end
 end
+
 
 function drawCellContent(x, y, w, h, cellContent, bw, bh)
     -- bh and bw stands for ball width and height
