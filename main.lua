@@ -1,5 +1,5 @@
-class = require "lib.30log"
-lume = require "lib.lume"
+class = require "lib.30log.30log"
+lume = require "lib.lume.lume"
 
 Cell = require "cell"
 Grid = require "grid"
