@@ -81,12 +81,12 @@ end
 function Grid:projectShapeToGrid(x, y, shape)
     local lg = love.graphics
 
-    -- Harcode fours because i don't think 
+    -- Harcode fours because i don't think
     -- i would do larger shapes
     for j = 1, 4 do
         for i = 1, 4 do
-            if shape[j][i] == 1 then
-                lg.rectangle('fill', 
+            if shape[i+j*4] == 1 then
+                lg.rectangle('fill',
                     self.x + (x + i - 1) * self.size,
                     self.y + (y + j - 1) * self.size,
                     self.size, self.size
@@ -109,7 +109,7 @@ function Grid:shapeCanBePlaced(x, y, shape)
     -- Check if shape is collides with other
     for j = 1, 4 do
         for i = 1, 4 do
-            if shape[j][i] == 1 and 
+            if shape[i+j*4] == 1 and
                not self.cells[y + j][x + i]:empty() then
                 return false
             end
@@ -129,7 +129,7 @@ function Grid:placeShape(x, y, shape, playerId)
 
     for j = 1, 4 do
         for i = 1, 4 do
-            if shape[j][i] == 1 then
+            if shape[i+j*4] == 1 then
                 self.cells[y + j][x + i].owner = playerId
             end
         end
