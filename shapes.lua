@@ -1,6 +1,6 @@
 local shapes = {}
 
-shape.codes = {'i', 'j', 'l', 'z', 's', 'o', 't'}
+shapes.codes = {'i', 'j', 'l', 'z', 's', 'o', 't'}
 
 shapes['i'] = {
     {
@@ -136,3 +136,5 @@ shapes['t'] = {
         0,0,0,0
     }
 }
+
+return shapes
