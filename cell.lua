@@ -50,7 +50,7 @@ function Cell.generateCellContent(numberOfPlayers)
     local weights = { [1] = 10, [2] = 8, [3] = 4 }
     for i = 1, numberOfPlayers do
         local count = lume.weightedchoice(weights)
-        table.insert(cellContent, count)
+        cellContent[#cellContent+1] = count
     end
     return cellContent
 end
