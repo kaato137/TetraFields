@@ -1,15 +1,14 @@
-
-local Grid = class("Grid", {
+local Grid = Object:extend("Grid", {
     x = 0, y = 0,
     cols = 0, rows = 0,
     size = 0,
-    width = 0, height = 0
+    width = 0, height = 0,
+    selectedPos = {0, 0}
 })
 
 
 function Grid:init(x, y, cols, rows, size)
-    self.x = x or 0
-    self.y = y or 0
+    Grid.super.init(self, x, y)
     self.cols = cols or 10
     self.rows = rows or 10
     self.size = size or 32
