@@ -1,6 +1,7 @@
 class = require "lib.30log.30log"
 lume = require "lib.lume.lume"
 
+Object = require "object"
 Cell = require "cell"
 Grid = require "grid"
 utils = require "utils"
@@ -28,7 +29,7 @@ end
 
 
 function love.update(dt)
-
+    grid:update(dt)
 end
 
 
@@ -44,9 +45,16 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 
+function love.mousemoved(x, y, dx, dy, istouch)
+    if grid:containsPoint(x, y) then
+        grid:mouseOn(x, y)
+    end
+end
+
+
 function love.mousepressed(x, y, button, istouch)
     if button == 'l' then
-        local mx, my = grid:mouse2pos()
+        local mx, my = grid:mouse2pos(x, y)
         grid:placeShape(mx - 1, my - 1, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
         nextTurn()
     end
@@ -58,3 +66,4 @@ function nextTurn()
     CURRENT_PLAYER = (CURRENT_PLAYER % PLAYER_COUNT) + 1
     ROTATION = 1
 end
+

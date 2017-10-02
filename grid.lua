@@ -35,18 +35,16 @@ function Grid:draw()
     lg.setColor(255, 255, 255)
 
     -- Draw mouse position
-    if self:isMouseOn() then
-        local mx, my = self:mouse2pos()
-        local shape = shapes[SHAPE][ROTATION]
+    local shape = shapes[SHAPE][ROTATION]
 
-        -- Draw shape projection
-        if self:shapeCanBePlaced(mx - 1, my - 1, shape) then
-            lg.setColor(0, 0, 100)
-        else
-            lg.setColor(100, 0, 0)
-        end
-        self:projectShapeToGrid(mx - 1, my - 1, shape)
+    -- Draw shape projection
+    local sx, sy = unpack(self.selectedPos)
+    if self:shapeCanBePlaced(sx, sy, shape) then
+        lg.setColor(0, 0, 100)
+    else
+        lg.setColor(100, 0, 0)
     end
+    self:projectShapeToGrid(sx - 1, sy - 1, shape)
 
     -- Draw grid content
     for j = 1, #self.cells do
@@ -61,16 +59,13 @@ function Grid:draw()
 end
 
 
-function Grid:isMouseOn()
-    local mx = love.mouse.getX()
-    local my = love.mouse.getY()
-    return utils.includes(mx, my, self.x, self.y, self.width - 1, self.height - 1)
+function Grid:mouseOn(x, y)
+    local mx, my = self:mouse2pos(x, y)
+    self.selectedPos = {mx, my}
 end
 
 
-function Grid:mouse2pos()
-    local mx = love.mouse.getX()
-    local my = love.mouse.getY()
+function Grid:mouse2pos(mx, my)
     local cellOnX = math.floor(math.abs(mx - self.x) / self.size)
     local cellOnY = math.floor(math.abs(my - self.y) / self.size)
     return cellOnX, cellOnY
@@ -121,13 +116,6 @@ end
 
 
 function Grid:placeShape(x, y, shape, playerId)
-    if not self:isMouseOn() then
-        return
-    end
-    if not self:shapeCanBePlaced(x, y, shape) then
-        return
-    end
-
     for j = 1, 4 do
         for i = 1, 4 do
             if shape[i+j*4] == 1 then
