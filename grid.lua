@@ -97,7 +97,7 @@ function Grid:shapeCanBePlaced(x, y, shape)
     for j = 3, 0, -1 do
         for i = 3, 0, -1 do
             if (x + i > self.cols) or (y + j > self.rows) or
-               (x + i < 0) or (y + j < 0) then
+               (x + i <= 0) or (y + j <= 0) then
                 return false
             end        
         end
