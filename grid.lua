@@ -83,12 +83,12 @@ function Grid:projectShapeToGrid(x, y, shape)
 
     -- Harcode fours because i don't think
     -- i would do larger shapes
-    for j = 1, 4 do
-        for i = 1, 4 do
-            if shape[i+j*4] == 1 then
+    for j = 0, 3 do
+        for i = 0, 3 do
+            if shape[i+j*4 + 1] == 1 then
                 lg.rectangle('fill',
-                    self.x + (x + i - 1) * self.size,
-                    self.y + (y + j - 1) * self.size,
+                    self.x + (x + i) * self.size,
+                    self.y + (y + j) * self.size,
                     self.size, self.size
                 )
             end
