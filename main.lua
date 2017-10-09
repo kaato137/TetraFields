@@ -8,15 +8,15 @@ utils = require "utils"
 shapes = require "shapes"
 
 COLOR_MAP = {
-    {200, 0, 50},
-    {0, 200, 50},
-    {50, 0, 200}
+    { 200, 0, 50 },
+    { 0, 200, 50 },
+    { 50, 0, 200 }
 }
 
 
 function love.load()
-    GRID_COLS = 15
-    GRID_ROWS = 15
+    GRID_COLS = 10
+    GRID_ROWS = 10
     GRID_SIZE = 32
 
     PLAYER_COUNT = 3
@@ -53,16 +53,18 @@ end
 
 
 function love.mousepressed(x, y, button, istouch)
-    if button == 'l' then
+    print(button)
+    if button == 'l' or button == 1 then
+        print("Click")
         local mx, my = grid:mouse2pos(x, y)
-        grid:placeShape(mx - 1, my - 1, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
+        grid:placeShape(mx, my, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
         nextTurn()
     end
 end
 
 
 function nextTurn()
-    SHAPE = lume.randomchoice(shapes.shapes)
+    SHAPE = lume.randomchoice(shapes.codes)
     CURRENT_PLAYER = (CURRENT_PLAYER % PLAYER_COUNT) + 1
     ROTATION = 1
 end

@@ -39,12 +39,16 @@ function Grid:draw()
 
     -- Draw shape projection
     local sx, sy = unpack(self.selectedPos)
+
+    lg.print(sx, 32, 32)
+    lg.print(sy, 32, 64)
+
     if self:shapeCanBePlaced(sx, sy, shape) then
         lg.setColor(0, 0, 100)
     else
         lg.setColor(100, 0, 0)
     end
-    self:projectShapeToGrid(sx - 1, sy - 1, shape)
+    self:projectShapeToGrid(sx, sy, shape)
 
     -- Draw grid content
     for j = 1, #self.cells do
@@ -103,9 +107,9 @@ function Grid:shapeCanBePlaced(x, y, shape)
         end
     end
     -- Check if shape is collides with other
-    for j = 1, 4 do
-        for i = 1, 4 do
-            if shape[i+j*4] == 1 and
+    for j = 0, 3 do
+        for i = 0, 3 do
+            if shape[i+j*4 + 1] == 1 and
                not self.cells[y + j][x + i]:empty() then
                 return false
             end
@@ -116,9 +120,9 @@ end
 
 
 function Grid:placeShape(x, y, shape, playerId)
-    for j = 1, 4 do
-        for i = 1, 4 do
-            if shape[i+j*4] == 1 then
+    for j = 0, 3 do
+        for i = 0, 3 do
+            if shape[i+j*4 + 1] == 1 then
                 self.cells[y + j][x + i].owner = playerId
             end
         end
