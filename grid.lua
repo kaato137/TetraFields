@@ -3,7 +3,8 @@ local Grid = Object:extend("Grid", {
     cols = 0, rows = 0,
     size = 0,
     width = 0, height = 0,
-    selectedPos = {0, 0}
+    selectedPos = {0, 0},
+    shapeOffset = 1,
 })
 
 
@@ -34,11 +35,9 @@ function Grid:draw()
     drawGrid(self.x, self.y, self.cols, self.rows, self.size)
     lg.setColor(255, 255, 255)
 
-    -- Draw mouse position
     local shape = shapes[SHAPE][ROTATION]
 
-    -- Draw shape projection
-    local sx, sy = unpack(self.selectedPos)
+    local sx, sy = self:getShapePos()
 
     lg.print(sx, 32, 32)
     lg.print(sy, 32, 64)
@@ -69,9 +68,15 @@ function Grid:mouseOn(x, y)
 end
 
 
+function Grid:getShapePos()
+    local x, y = unpack(self.selectedPos)
+    return x - self.shapeOffset, y - self.shapeOffset
+end
+
+
 function Grid:mouse2pos(mx, my)
-    local cellOnX = math.floor(math.abs(mx - self.x) / self.size)
-    local cellOnY = math.floor(math.abs(my - self.y) / self.size)
+    local cellOnX = math.floor(math.abs(mx - self.x) / self.size) + 1
+    local cellOnY = math.floor(math.abs(my - self.y) / self.size) + 1
     return cellOnX, cellOnY
 end
 
@@ -85,8 +90,8 @@ function Grid:projectShapeToGrid(x, y, shape)
         for i = 0, 3 do
             if shape[i+j*4 + 1] == 1 then
                 lg.rectangle('fill',
-                    self.x + (x + i) * self.size,
-                    self.y + (y + j) * self.size,
+                    self.x + (x-1 + i) * self.size,
+                    self.y + (y-1 + j) * self.size,
                     self.size, self.size
                 )
             end
@@ -100,8 +105,10 @@ function Grid:shapeCanBePlaced(x, y, shape)
     -- parts is out of the grid.
     for j = 3, 0, -1 do
         for i = 3, 0, -1 do
-            if (x + i > self.cols) or (y + j > self.rows) or
-               (x + i <= 0) or (y + j <= 0) then
+            local xx = x + i
+            local yy = y + j
+            if (xx > self.cols) or (yy > self.rows) or
+               (xx <= 0) or (yy <= 0) then
                 return false
             end        
         end

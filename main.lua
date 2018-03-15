@@ -55,9 +55,8 @@ end
 function love.mousepressed(x, y, button, istouch)
     print(button)
     if button == 'l' or button == 1 then
-        print("Click")
-        local mx, my = grid:mouse2pos(x, y)
-        grid:placeShape(mx, my, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
+        local sx, sy = grid:getShapePos()
+        grid:placeShape(sx, sy, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
         nextTurn()
     end
 end
