@@ -9,32 +9,43 @@ function Cell:init(playerCount)
 end
 
 
-function Cell:draw(x, y, w, h, bw, bh)
-    -- bh and bw stands for ball width and height
-    local bw = bw or 4
-    local bh = bh or 4
+function Cell:draw(x, y, cellWidth, cellHeight, ballWidth, ballHeight)
+    -- ballHeight and ballWidth stands for ball width and height
+    local ballWidth = ballWidth or 4
+    local ballHeight = ballHeight or 4
     local lg = love.graphics
     local playersCount = #self.content
 
-    local rowHeight = h / playersCount
+    local rowHeight = cellHeight / playersCount
 
-    lg.print(self.owner, x, y)
     -- Draw owner background
     if self.owner > 0 then
-        lg.setColor(COLOR_MAP[self.owner])
-        lg.rectangle("fill", x, y, w, h)
-    end    
+        -- Dim the blackground color a
+        -- bit so it don't overlap balls.
+        local color = COLOR_MAP[self.owner]
+        local backColor = {
+            color[1] / 2,
+            color[2] / 2,
+            color[3] / 2
+        }
+        lg.setColor(backColor)
+        lg.rectangle("fill", x, y, cellWidth, cellHeight)
+    end
 
     for pli = 1, playersCount do
         local ballCount = self.content[pli]
-        lg.setColor(COLOR_MAP[pli])
-        for bi = 1, ballCount do
-            local center = x + (w / 2) - (ballCount * bw * 2) / 2
-            lg.circle("fill",
-                center + (bi-1) * (bw * 2) + bw,
-                y + (rowHeight * (pli - 1)) + bh * 2,
-                bw, bh
-            )
+        for ballIndex = 1, ballCount do
+            local center = x + (cellWidth / 2) - (ballCount * ballWidth * 2) / 2
+            local ballX = center + (ballIndex-1) * (ballWidth * 2) + ballWidth
+            local ballY = y + (rowHeight * (pli - 1)) + ballHeight * 2
+
+            -- White shadow for ball
+            lg.setColor({255, 255, 255})
+            lg.circle("fill", ballX + 1, ballY + 1, ballWidth, ballHeight)
+
+            -- The actual ball.
+            lg.setColor(COLOR_MAP[pli])
+            lg.circle("fill", ballX, ballY, ballWidth, ballHeight)
         end
     end
 end
