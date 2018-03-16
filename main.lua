@@ -52,13 +52,6 @@ function love.draw()
 end
 
 
-function love.keypressed(key, scancode, isrepeat)
-    if key == 'left' or key == 'right' then
-        ROTATION = (ROTATION % #shapes[SHAPE]) + 1
-    end
-end
-
-
 function love.mousemoved(x, y, dx, dy, istouch)
     if grid:containsPoint(x, y) then
         grid:mouseOn(x, y)
@@ -72,6 +65,8 @@ function love.mousepressed(x, y, button, istouch)
         local sx, sy = grid:getShapePos()
         grid:placeShape(sx, sy, shapes[SHAPE][ROTATION], CURRENT_PLAYER)
         nextTurn()
+    elseif button == 'r' or button == 2 then
+        rotateShape()
     end
 end
 
@@ -80,6 +75,11 @@ function nextTurn()
     SHAPE = lume.randomchoice(shapes.codes)
     CURRENT_PLAYER = (CURRENT_PLAYER % PLAYER_COUNT) + 1
     ROTATION = 1
+end
+
+
+function rotateShape()
+    ROTATION = (ROTATION % #shapes[SHAPE]) + 1
 end
 
 
