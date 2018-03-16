@@ -24,6 +24,9 @@ function love.load()
     SHAPE = 'l'
     ROTATION = 1
 
+    g_players = {}
+    initPlayers(PLAYER_COUNT)
+
     grid = Grid(100, 100, GRID_COLS, GRID_ROWS, GRID_SIZE)
 end
 
@@ -34,7 +37,18 @@ end
 
 
 function love.draw()
+    local lg = love.graphics
     grid:draw()
+    lg.push()
+    for k, v in ipairs(g_players) do
+        if k == CURRENT_PLAYER then
+            lg.setColor(255, 255, 0)
+        else
+            lg.setColor(255, 255, 255)
+        end
+        lg.print(k .. ': ' .. v, 64 * k, 0)
+    end
+    lg.pop()
 end
 
 
@@ -68,3 +82,9 @@ function nextTurn()
     ROTATION = 1
 end
 
+
+function initPlayers(count)
+    for i = 1, count do
+        g_players[i] = 100
+    end
+end
