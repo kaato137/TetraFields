@@ -107,10 +107,11 @@ function Grid:shapeCanBePlaced(x, y, shape)
         for i = 3, 0, -1 do
             local xx = x + i
             local yy = y + j
-            if (xx > self.cols) or (yy > self.rows) or
-               (xx <= 0) or (yy <= 0) then
+            if (shape[i + j * 4 + 1] == 1) and (
+               (xx > self.cols) or (yy > self.rows) or
+               (xx < 1) or (yy < 1)) then
                 return false
-            end        
+            end
         end
     end
     -- Check if shape is collides with other
