@@ -137,4 +137,9 @@ shapes['t'] = {
     }
 }
 
+
+function shapes.getRandomShape()
+    return lume.randomchoice(shapes.codes)
+end
+
 return shapes

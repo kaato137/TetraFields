@@ -39,9 +39,6 @@ function Grid:draw()
 
     local sx, sy = self:getShapePos()
 
-    lg.print(sx, 32, 32)
-    lg.print(sy, 32, 64)
-
     if self:shapeCanBePlaced(sx, sy, shape) then
         lg.setColor(0, 0, 100)
     else
