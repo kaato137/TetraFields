@@ -14,3 +14,5 @@ end
 function State:draw()
     --! Not implemented
 end
+
+return State

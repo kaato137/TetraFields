@@ -7,6 +7,7 @@ Grid = require "grid"
 utils = require "utils"
 shapes = require "shapes"
 
+State = require "state"
 GameState = require "gamestate"
 
 COLOR_MAP = {

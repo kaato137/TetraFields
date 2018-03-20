@@ -18,13 +18,23 @@ end
 
 
 function GameState:update(dt)
-    grid:update(dt)
+    self.grid:update(dt)
 end
 
 
 function GameState:draw()
     local lg = love.graphics
-    grid:draw()
+
+    self.grid:draw()
+
+    local sx, sy = self.grid:getShapePos()
+    if self.grid:shapeCanBePlaced(sx, sy, self:getShape()) then
+        self.grid:projectShape(sx, sy, self:getShape(), {0, 0, 100})
+    else
+        self.grid:projectShape(sx, sy, self:getShape(), {100, 0, 0})
+    end
+
+    -- Draw player bars
     lg.push()
     for k, v in ipairs(self.players) do
         if k == self.currentPlayer then
@@ -35,6 +45,7 @@ function GameState:draw()
         lg.print(k .. ': ' .. v, 64 * k, 0)
     end
     lg.pop()
+
 end
 
 
@@ -49,7 +60,7 @@ function GameState:mousepressed(x, y, button)
     -- LEFT MOUSE CLICK
     if button == 'l' or button == 1 then
 
-        local shape = shapes[SHAPE][ROTATION]
+        local shape = self:getShape()
         local sx, sy = self.grid:getShapePos()
 
         if not self.grid:shapeCanBePlaced(sx, sy, shape) then
@@ -61,7 +72,7 @@ function GameState:mousepressed(x, y, button)
 
     -- RIGHT MOUSE CLICK
     elseif button == 'r' or button == 2 then
-        rotateShape()
+        self:rotateShape()
     end
 end
 
@@ -85,6 +96,14 @@ function GameState:nextTurn()
 end
 
 
+function GameState:getShape()
+    return shapes[self.shape][self.rotation]
+end
+
+
 function GameState:rotateShape()
     self.rotation = (self.rotation % #shapes[self.shape]) + 1
 end
+
+
+return GameState

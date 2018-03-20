@@ -26,7 +26,9 @@ function Grid:update(dt)
 
 end
 
+-- } END UPDATE REGION
 
+-- { RENDER REGION
 function Grid:draw()
     local lg = love.graphics
 
@@ -34,17 +36,6 @@ function Grid:draw()
     lg.setColor(10, 100, 200)
     drawGrid(self.x, self.y, self.cols, self.rows, self.size)
     lg.setColor(255, 255, 255)
-
-    local shape = shapes[SHAPE][ROTATION]
-
-    local sx, sy = self:getShapePos()
-
-    if self:shapeCanBePlaced(sx, sy, shape) then
-        lg.setColor(0, 0, 100)
-    else
-        lg.setColor(100, 0, 0)
-    end
-    self:projectShapeToGrid(sx, sy, shape)
 
     -- Draw grid content
     for j = 1, #self.cells do
@@ -57,6 +48,26 @@ function Grid:draw()
         end
     end
 end
+
+
+function Grid:projectShape(x, y, shape, color)
+    local lg = love.graphics
+
+    lg.setColor(unpack(color))
+    for j = 0, 3 do
+        for i = 0, 3 do
+            if shape[i+j*4 + 1] == 1 then
+                lg.rectangle('fill',
+                    self.x + (x-1 + i) * self.size,
+                    self.y + (y-1 + j) * self.size,
+                    self.size, self.size
+                )
+            end
+        end
+    end
+end
+
+-- } END RENDER REGION
 
 
 function Grid:mouseOn(x, y)
@@ -75,25 +86,6 @@ function Grid:mouse2pos(mx, my)
     local cellOnX = math.floor(math.abs(mx - self.x) / self.size) + 1
     local cellOnY = math.floor(math.abs(my - self.y) / self.size) + 1
     return cellOnX, cellOnY
-end
-
-
-function Grid:projectShapeToGrid(x, y, shape)
-    local lg = love.graphics
-
-    -- Harcode fours because i don't think
-    -- i would do larger shapes
-    for j = 0, 3 do
-        for i = 0, 3 do
-            if shape[i+j*4 + 1] == 1 then
-                lg.rectangle('fill',
-                    self.x + (x-1 + i) * self.size,
-                    self.y + (y-1 + j) * self.size,
-                    self.size, self.size
-                )
-            end
-        end
-    end
 end
 
 
@@ -125,13 +117,16 @@ end
 
 
 function Grid:placeShape(x, y, shape, playerId)
+    local red, green, blue = 0, 0, 0
     for j = 0, 3 do
         for i = 0, 3 do
             if shape[i+j*4 + 1] == 1 then
-                self.cells[y + j][x + i].owner = playerId
+                local cell = self.cells[y + j][x + i]
+                cell.owner = playerId
             end
         end
     end
+    return red, green, blue
 end
 
 
