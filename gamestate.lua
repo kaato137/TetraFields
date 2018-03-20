@@ -11,7 +11,7 @@ local GameState = State:extend("GameState", {
 local DEFAULT_GRID_SIZE = 32
 
 function GameState:init(cols, rows, playerCount, size)
-    self.grid = Grid(offsetX, offsetY, cols, rows, size or DEFAULT_GRID_SIZE)
+    self.grid = Grid(0, 16, cols, rows, size or DEFAULT_GRID_SIZE)
     self.shape = shapes.getRandomShape()
     self:initPlayers(playerCount)
 end
