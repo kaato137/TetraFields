@@ -18,6 +18,14 @@ COLOR_MAP = {
 
 
 function love.load()
+    -- LOAD AND SET CUSTOM IMAGE FONT
+	font = love.graphics.newImageFont(
+        "res/Imagefont.png",
+        " abcdefghijklmnopqrstuvwxyz" ..
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0" ..
+        "123456789.,!?-+/():;%&`'*#=[]\"")
+
+	love.graphics.setFont(font)
     currentState = GameState(10, 10, 3)
 end
 
