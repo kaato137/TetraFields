@@ -1,6 +1,7 @@
 local Cell = class('Cell', {
     content = {},
-    owner = 0
+    owner = 0,
+    timer = 0,
 })
 
 
@@ -9,14 +10,17 @@ function Cell:init(playerCount)
 end
 
 
+function Cell:update(dt)
+    self.timer = self.timer + dt * 50
+end
+
+
 function Cell:draw(x, y, cellWidth, cellHeight, ballWidth, ballHeight)
     -- ballHeight and ballWidth stands for ball width and height
     local ballWidth = ballWidth or 4
     local ballHeight = ballHeight or 4
     local lg = love.graphics
-    local playersCount = #self.content
-
-    local rowHeight = cellHeight / playersCount
+    local ballCount = #self.content
 
     -- Draw owner background
     if self.owner > 0 then
@@ -32,21 +36,23 @@ function Cell:draw(x, y, cellWidth, cellHeight, ballWidth, ballHeight)
         lg.rectangle("fill", x, y, cellWidth, cellHeight)
     end
 
-    for pli = 1, playersCount do
-        local ballCount = self.content[pli]
-        for ballIndex = 1, ballCount do
-            local center = x + (cellWidth / 2) - (ballCount * ballWidth * 2) / 2
-            local ballX = center + (ballIndex-1) * (ballWidth * 2) + ballWidth
-            local ballY = y + (rowHeight * (pli - 1)) + ballHeight * 2
+    for i = 1, ballCount do
+        local ball = self.content[i]
+        local step = 360 / ballCount
 
-            -- White shadow for ball
-            lg.setColor({255, 255, 255})
-            lg.circle("fill", ballX + 1, ballY + 1, ballWidth, ballHeight)
+        local centerX = cellWidth / 2 - ballWidth / 2
+        local centerY = cellHeight / 2 - ballHeight / 2
 
-            -- The actual ball.
-            lg.setColor(COLOR_MAP[pli])
-            lg.circle("fill", ballX, ballY, ballWidth, ballHeight)
-        end
+        local ballX = x + centerX + math.cos(math.rad(step * (i - 1) + self.timer)) * 8
+        local ballY = y + centerY - math.sin(math.rad(step * (i - 1) + self.timer)) * 8
+
+        -- White shadow for ball
+        lg.setColor({255, 255, 255})
+        lg.circle("fill", ballX + 1, ballY + 1, ballWidth, ballHeight)
+
+        -- The actual ball.
+        lg.setColor(COLOR_MAP[ball])
+        lg.circle("fill", ballX, ballY, ballWidth, ballHeight)
     end
 end
 
@@ -56,12 +62,12 @@ function Cell:empty()
 end
 
 
-function Cell.generateCellContent(numberOfPlayers)
+function Cell.generateCellContent()
     local cellContent = {}
     local weights = { [1] = 10, [2] = 8, [3] = 4 }
-    for i = 1, numberOfPlayers do
-        local count = lume.weightedchoice(weights)
-        cellContent[#cellContent+1] = count
+    local count = lume.weightedchoice(weights)
+    for i = 1, count do
+        table.insert(cellContent, math.floor(lume.random(1, 4)))
     end
     return cellContent
 end

@@ -23,7 +23,11 @@ end
 
 
 function Grid:update(dt)
-
+    for j = 1, #self.cells do
+        for i = 1, #self.cells[j] do
+            self.cells[j][i]:update(dt)
+        end
+    end
 end
 
 -- } END UPDATE REGION
