@@ -25,14 +25,14 @@ end
 function GameState:draw()
     local lg = love.graphics
 
-    self.grid:draw()
-
     local sx, sy = self.grid:getShapePos()
     if self.grid:shapeCanBePlaced(sx, sy, self:getShape()) then
         self.grid:projectShape(sx, sy, self:getShape(), {0, 0, 100})
     else
         self.grid:projectShape(sx, sy, self:getShape(), {100, 0, 0})
     end
+
+    self.grid:draw()
 
     -- Draw player bars
     lg.push()
