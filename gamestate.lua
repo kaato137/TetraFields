@@ -27,7 +27,7 @@ function GameState:draw()
 
     local sx, sy = self.grid:getShapePos()
     if self.grid:shapeCanBePlaced(sx, sy, self:getShape()) then
-        self.grid:projectShape(sx, sy, self:getShape(), {0, 0, 100})
+        self.grid:projectShape(sx, sy, self:getShape(), COLOR_MAP[self.currentPlayer])
     else
         self.grid:projectShape(sx, sy, self:getShape(), {100, 0, 0})
     end
@@ -38,10 +38,10 @@ function GameState:draw()
     lg.push()
     for k, v in ipairs(self.players) do
         if k == self.currentPlayer then
-            lg.setColor(255, 255, 0)
-        else
-            lg.setColor(255, 255, 255)
+            lg.setColor({255, 255, 0})
+            lg.print(k .. ': ' .. v, 64 * k + 2, 2)
         end
+        lg.setColor(COLOR_MAP[k])
         lg.print(k .. ': ' .. v, 64 * k, 0)
     end
     lg.pop()
@@ -67,7 +67,16 @@ function GameState:mousepressed(x, y, button)
             return
         end
 
-        self.grid:placeShape(sx, sy, shape, self.currentPlayer)
+        local scores = self.grid:placeShape(sx, sy, shape, self.currentPlayer)
+
+        for k, v in ipairs(scores) do
+            if k == self.currentPlayer then
+                self.players[k] = self.players[k] + v
+            else
+                self.players[k] = self.players[k] - v
+            end
+        end
+
         self:nextTurn()
 
     -- RIGHT MOUSE CLICK

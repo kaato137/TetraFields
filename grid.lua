@@ -121,16 +121,23 @@ end
 
 
 function Grid:placeShape(x, y, shape, playerId)
-    local red, green, blue = 0, 0, 0
+    local counter = {}
     for j = 0, 3 do
         for i = 0, 3 do
             if shape[i+j*4 + 1] == 1 then
                 local cell = self.cells[y + j][x + i]
                 cell.owner = playerId
+                for _, v in ipairs(cell.content) do
+                    if counter[v] == nil then
+                        counter[v] = 1
+                    else
+                        counter[v] = counter[v] + 1
+                    end
+                end
             end
         end
     end
-    return red, green, blue
+    return counter
 end
 
 

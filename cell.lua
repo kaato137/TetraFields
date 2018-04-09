@@ -34,6 +34,7 @@ function Cell:draw(x, y, cellWidth, cellHeight, ballWidth, ballHeight)
         }
         lg.setColor(backColor)
         lg.rectangle("fill", x, y, cellWidth, cellHeight)
+        return
     end
 
     for i = 1, ballCount do
@@ -43,8 +44,8 @@ function Cell:draw(x, y, cellWidth, cellHeight, ballWidth, ballHeight)
         local centerX = cellWidth / 2 - ballWidth / 2
         local centerY = cellHeight / 2 - ballHeight / 2
 
-        local ballX = x + centerX + math.cos(math.rad(step * (i - 1) + self.timer)) * 8
-        local ballY = y + centerY - math.sin(math.rad(step * (i - 1) + self.timer)) * 8
+        local ballX = x + centerX + math.cos(math.rad(step * (i - 1) - step / 2 + self.timer)) * 8
+        local ballY = y + centerY - math.sin(math.rad(step * (i - 1) - step / 2 + self.timer)) * 8
 
         -- White shadow for ball
         lg.setColor({255, 255, 255})
